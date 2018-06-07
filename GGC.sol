@@ -93,7 +93,7 @@ contract GottaGoCoin is StandardToken {
     //string public version = 'H1.0'; 
     uint256 public unitsOneEthCanBuy;     // How many units of your coin can be bought by 1 ETH?
     uint256 public totalEthInWei;         // WEI is the smallest unit of ETH (the equivalent of cent in USD or satoshi in BTC). We'll store the total ETH raised via our ICO here.  
-    address private adminWallet;           // Where should the raised ETH go?
+    address public adminWallet;           // Where should the raised ETH go?
 
     // This is a constructor function 
     // which means the following function name has to match the contract name declared above
@@ -110,7 +110,7 @@ contract GottaGoCoin is StandardToken {
     function() payable{
         totalEthInWei = totalEthInWei + msg.value;
         uint256 amount = msg.value * unitsOneEthCanBuy;
-        require(balances[adminWallet] >= amount);
+        require(balances[msg.sender] >= amount);
 
         balances[adminWallet] = balances[adminWallet] - amount;
         balances[msg.sender] = balances[msg.sender] + amount;
@@ -121,20 +121,20 @@ contract GottaGoCoin is StandardToken {
         adminWallet.transfer(msg.value);                               
     }
     
-    /*
-    function sendCoin() payable returns (bool sendable) {
+    
+    function checkIn() payable  {
         //totalEthInWei = totalEthInWei + msg.value;
         uint256 amount = 1 * (10 ** decimals); // 1GGC 지급
-        if(balances[adminWallet] < amount) return false;
-
+        requires(balances[adminWallet] < amount,"코인이 다 떨어졌습니다");
+        
         balances[adminWallet] = balances[adminWallet] - amount;
         balances[msg.sender] = balances[msg.sender] + amount;
 
         Transfer(adminWallet, msg.sender, amount); // Broadcast a message to the blockchain
-        return true;
+        
                                    
     }
-    */
+    
 
     /* Approves and then calls the receiving contract */
     function approveAndCall(address _spender, uint256 _value, bytes _extraData) returns (bool success) {
