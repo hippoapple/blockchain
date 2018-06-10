@@ -9,7 +9,7 @@ contract Travel {
     string[] locations;
     mapping (string => uint) difficulty;
     mapping (uint => address) public idToTraveler;
-    mapping (address => Traveler) public addressToTraveler;
+    mapping (address => Traveler) addressToTraveler;
     event newUser(string name, address wallet);
     
     function Travel() {
@@ -30,9 +30,9 @@ contract Travel {
         _;
     }
     
-    function newTraveler(string _name) internal {
+    function newTraveler(string _name) public {
         string[] memory empty;
-        Traveler memory temp = Traveler(_name, msg.sender, empty, 0);
+        Traveler memory temp = Traveler(_name, msg.sender, new string[](0), 0);
         uint id = travelers.push(temp) - 1; // memory는 포인터 없나... 자료가 없다... 제발 포인터 없기를.. null도 안됨
         idToTraveler[id] = msg.sender;
         addressToTraveler[msg.sender] = temp; 
@@ -41,6 +41,7 @@ contract Travel {
     
     function addNewLocation(string _location, uint _difficulty) public onlyAdmin {
         difficulty[_location] = _difficulty;
+        uint l = locations.length;
         locations.push(_location);
     }
     
@@ -68,7 +69,10 @@ contract Travel {
         
         addressToTraveler[msg.sender].visitedPlaces.push(_location);
         
-        
+    }
+    
+    function getTraveler(uint number) public returns (string) {
+        return travelers[number].name;
     }
 
     
