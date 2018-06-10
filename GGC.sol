@@ -1,5 +1,7 @@
 pragma solidity ^0.4.21;
 
+
+
 contract Token {
 
     /// @return total amount of tokens
@@ -87,54 +89,49 @@ contract StandardToken is Token {
 contract GottaGoCoin is StandardToken { 
 
     
-    string public name;                   // Token Name
-    uint8 public decimals;                // How many decimals to show. To be standard complicant keep it 18
-    string public symbol;                 // An identifier: eg SBX, XPR etc..
+    string public name;                   
+    uint8 public decimals;               
+    string public symbol;                 
     //string public version = 'H1.0'; 
-    uint256 public unitsOneEthCanBuy;     // How many units of your coin can be bought by 1 ETH?
-    uint256 public totalEthInWei;         // WEI is the smallest unit of ETH (the equivalent of cent in USD or satoshi in BTC). We'll store the total ETH raised via our ICO here.  
-    address public adminWallet;           // Where should the raised ETH go?
+    uint256 public unitsOneEthCanBuy;     
+    uint256 public totalEthInWei;         
+    address public adminWallet;           
 
-    // This is a constructor function 
-    // which means the following function name has to match the contract name declared above
-    function GottaGoCoin() {
-        balances[msg.sender] = 2000000000000000000000;               // Give the creator all initial tokens. This is set to 1000 for example. If you want your initial tokens to be X and your decimal is 5, set this value to X * 100000. (CHANGE THIS)
-        totalSupply = 2000000000000000000000;                        // Update total supply (1000 for example) (CHANGE THIS)
-        name = "GottaGoCoin";                                   // Set the name for display purposes (CHANGE THIS)
-        decimals = 18;                                               // Amount of decimals for display purposes (CHANGE THIS)
-        symbol = "GGC";                                             // Set the symbol for display purposes (CHANGE THIS)
-        unitsOneEthCanBuy = 10;                                      // Set the price of your token for the ICO (CHANGE THIS)
-        adminWallet = msg.sender;  // 운영자 지갑주소, temporaryily my metamask wallet                     
+    function GottaGoCoin() { //생성자
+        balances[msg.sender] = 2000000000000000000000;               
+        totalSupply = 2000000000000000000000;                        
+        name = "GottaGoCoin";                                   
+        decimals = 18;                                               
+        symbol = "GGC";                                             
+        unitsOneEthCanBuy = 10;                                      
+        adminWallet = msg.sender;  // 운영자 지갑주소, temporaryily my metamask wallet    
+       // Transfer(address(0x0), adminWallet, totalSupply);                 
     }
+
     
+    /*
     function() payable{
-        totalEthInWei = totalEthInWei + msg.value;
-        uint256 amount = msg.value * unitsOneEthCanBuy;
+        
+        uint amount = 1 * (10 ** decimals);
         require(balances[msg.sender] >= amount);
 
         balances[adminWallet] = balances[adminWallet] - amount;
         balances[msg.sender] = balances[msg.sender] + amount;
 
-        Transfer(adminWallet, msg.sender, amount); // Broadcast a message to the blockchain
+        Transfer(adminWallet, msg.sender, amount);
 
         //Transfer ether to fundsWallet
         adminWallet.transfer(msg.value);                               
     }
-    
-    
-    function checkIn() payable  {
-        //totalEthInWei = totalEthInWei + msg.value;
-        uint256 amount = 1 * (10 ** decimals); // 1GGC 지급
-        requires(balances[adminWallet] < amount,"코인이 다 떨어졌습니다");
-        
-        balances[adminWallet] = balances[adminWallet] - amount;
-        balances[msg.sender] = balances[msg.sender] + amount;
+    */
+ 
 
-        Transfer(adminWallet, msg.sender, amount); // Broadcast a message to the blockchain
-        
-                                   
+    function getToken(uint difficulty) public {
+        uint amount = difficulty * (10 ** decimals);
+        balances[msg.sender] = balances[msg.sender] + amount;
+        balances[adminWallet] = balances[adminWallet] - amount;
+        Transfer(adminWallet, msg.sender, amount);
     }
-    
 
     /* Approves and then calls the receiving contract */
     function approveAndCall(address _spender, uint256 _value, bytes _extraData) returns (bool success) {
